@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FAQ - TanggapIn</title>
+    <link rel="stylesheet" href="styles/style.css" />
+    <link rel="stylesheet" href="styles/faq.css" />
+    <link rel="stylesheet" href="styles/chat.css" />
+    <link rel="icon" type="image/x-icon" href="assets/images/icons/logo.webp" />
+  </head>
+  <body>
+    <header>
+      <div class="header-left">
+        <img src="assets/images/icons/logo.webp" alt="Logo" class="logo" />
+        <div class="logo-title">
+          <h1 class="header-title">TanggapIn</h1>
+          <p class="header-subtitle">
+            Sistem Pengaduan Publik Berbasis Agentic AI
+          </p>
+        </div>
+      </div>
+      <nav class="header-nav" id="mainNav">
+        <ul>
+          <li><a href="index.html">Beranda</a></li>
+          <li><a href="cara-melaporkan.html">Cara Melaporkan</a></li>
+          <li><a href="laporan.html">Laporan</a></li>
+          <li><a href="faq.html" class="active">FAQ</a></li>
+        </ul>
+      </nav>
+      <div class="header-right">
+        <a href="#" class="btn-lapor" data-open-chat>
+          <span>Laporkan Sekarang</span>
+          <span class="btn-icon">↗</span>
+        </a>
+        <button class="hamburger" id="menuToggle" aria-label="Buka menu"
+                aria-expanded="false" aria-controls="mainNav">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <section class="panel faq">
+        <h1>Pertanyaan yang Sering Diajukan</h1>
+        <p class="faq-lead">
+          Jawaban singkat seputar cara kerja TanggapIn. Klik pertanyaan untuk
+          melihat jawabannya.
+        </p>
+
+        <div class="faq-list">
+          <details>
+            <summary>Apa itu TanggapIn?</summary>
+            <div class="answer">
+              <p>
+                TanggapIn adalah platform pengaduan publik berbasis Agentic AI.
+                Masyarakat bisa melaporkan masalah di lingkungannya lewat
+                percakapan dengan asisten AI, lalu memantau perkembangan
+                laporannya dalam satu portal.
+              </p>
+            </div>
+          </details>
+
+          <details>
+            <summary>Siapa yang bisa membuat laporan?</summary>
+            <div class="answer">
+              <p>
+                Setiap warga bisa membuat laporan. Layanan online tersedia
+                24 jam, jadi kamu bisa melapor kapan saja.
+              </p>
+            </div>
+          </details>
+
+          <details>
+            <summary>Masalah apa saja yang bisa dilaporkan?</summary>
+            <div class="answer">
+              <p>
+                Masalah pelayanan publik dan lingkungan di sekitarmu, misalnya
+                jalan rusak, sampah menumpuk, lampu jalan mati, atau saluran air
+                tersumbat. Laporan di luar kewenangan pemerintah, seperti urusan
+                pihak swasta, dapat ditolak.
+              </p>
+            </div>
+          </details>
+
+          <details>
+            <summary>Informasi apa yang perlu saya siapkan?</summary>
+            <div class="answer">
+              <p>Siapkan empat hal berikut agar laporanmu mudah ditindaklanjuti:</p>
+              <ul>
+                <li>apa yang terjadi beserta deskripsinya,</li>
+                <li>lokasi kejadian,</li>
+                <li>waktu kejadian,</li>
+                <li>foto kondisi di lokasi.</li>
+              </ul>
+            </div>
+          </details>
+
+          <details>
+            <summary>Bagaimana cara mengisi lokasi?</summary>
+            <div class="answer">
+              <p>
+                Kamu bisa mengetik alamat atau patokan secara manual, atau
+                menggunakan lokasimu saat ini. Pilihan lokasi saat ini hanya
+                berjalan kalau kamu mengizinkan akses lokasi di browser.
+              </p>
+            </div>
+          </details>
+
+          <details>
+            <summary>Apa yang dilakukan AI setelah laporan saya dikirim?</summary>
+            <div class="answer">
+              <p>
+                Asisten AI memeriksa kelengkapan laporanmu. Kalau ada informasi
+                yang kurang, kamu akan diminta melengkapinya. Kalau sudah
+                lengkap, kamu akan mendapat pemberitahuan bahwa laporan
+                berhasil dikirim.
+              </p>
+            </div>
+          </details>
+
+          <details>
+            <summary>Apa arti status laporan?</summary>
+            <div class="answer">
+              <ul>
+                <li><strong>Diterima:</strong> laporan sudah masuk dan menunggu diproses.</li>
+                <li><strong>Ditangani:</strong> laporan sedang ditindaklanjuti oleh petugas.</li>
+                <li><strong>Selesai:</strong> masalah sudah ditangani.</li>
+                <li><strong>Ditolak:</strong> laporan tidak dapat diproses, disertai alasan penolakan.</li>
+              </ul>
+              <p>
+                Semua status bisa dilihat di halaman
+                <a href="laporan.html">Laporan</a>.
+              </p>
+            </div>
+          </details>
+
+          <details>
+            <summary>Mengapa laporan saya ditolak?</summary>
+            <div class="answer">
+              <p>
+                Penolakan biasanya terjadi karena laporan di luar kewenangan
+                pemerintah, informasinya tidak dapat diverifikasi, atau
+                isinya tidak termasuk pengaduan pelayanan publik. Alasan
+                penolakan ditampilkan pada laporan yang bersangkutan.
+              </p>
+            </div>
+          </details>
+
+          <details>
+            <summary>Apakah data pribadi saya aman?</summary>
+            <div class="answer">
+              <p>
+                Daftar laporan yang tampil untuk umum hanya memuat isi laporan,
+                tanpa identitas pelapor. Hindari menuliskan data pribadi
+                yang tidak diperlukan, seperti nomor identitas, di dalam
+                deskripsi laporan.
+              </p>
+            </div>
+          </details>
+
+          <details>
+            <summary>Apakah layanan ini berbayar?</summary>
+            <div class="answer">
+              <p>Tidak. TanggapIn gratis untuk masyarakat.</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="faq-cta">
+          <p>Belum menemukan jawabannya?</p>
+          <a href="#" class="btn-lapor" data-open-chat>
+            <span>Tanya Asisten</span>
+            <span class="btn-icon">↗</span>
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p>
+        Photo by <a
+          href="https://unsplash.com/@apyfz?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText"
+          >Alim</a
+        >
+        on
+        <a
+          href="https://unsplash.com/photos/a-view-of-a-city-at-night-from-the-top-of-a-building-tuk5MObiohA?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText"
+          >Unsplash</a
+        >
+      </p>
+      <h4>Dikelola oleh:</h4>
+      <div class="instansi">
+        <img src="assets/images/logos/instansi-panrb.webp" alt="PANRB" class="instansi-logo" />
+        <img src="assets/images/logos/instansi-kemendagri.webp" alt="Kemendagri" class="instansi-logo" />
+        <img src="assets/images/logos/instansi-kominfo.webp" alt="Kominfo" class="instansi-logo" />
+        <img src="assets/images/logos/instansi-kantor staff presiden.webp" alt="Kantor Staf Presiden" class="instansi-logo" />
+        <img src="assets/images/logos/instansi-ombudsman.webp" alt="Ombudsman" class="instansi-logo" />
+      </div>
+    </footer>
+
+    <!-- Overlay chat (sama seperti di index.html) -->
+    <div class="chat-overlay" id="chatOverlay" aria-hidden="true">
+      <div class="chat-dialog" role="dialog" aria-modal="true" aria-labelledby="chatTitle">
+        <div class="chat-header">
+          <img src="assets/images/mascots/mascot.webp" alt="" class="chat-avatar" />
+          <div class="chat-title">
+            <h2 id="chatTitle">Asisten TanggapIn</h2>
+            <p>Siap membantu menyusun laporanmu</p>
+          </div>
+          <button class="chat-close" id="chatClose" aria-label="Tutup chat">✕</button>
+        </div>
+        <div class="chat-messages" id="chatMessages" aria-live="polite"></div>
+        <div class="chat-chips" id="chatChips">
+          <button type="button">Jalan rusak</button>
+          <button type="button">Sampah menumpuk</button>
+          <button type="button">Lampu jalan mati</button>
+        </div>
+        <form class="chat-form" id="chatForm">
+          <textarea id="chatInput" rows="1" placeholder="Tulis laporanmu..." aria-label="Pesan"></textarea>
+          <button type="submit" class="chat-send" aria-label="Kirim">➤</button>
+        </form>
+      </div>
+    </div>
+
+    <script src="scripts/menu.js"></script>
+    <script src="scripts/chat.js"></script>
+  </body>
+</html>

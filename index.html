@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TanggapIn</title>
+    <link rel="stylesheet" href="styles/style.css" />
+    <link rel="stylesheet" href="styles/chat.css" />
+    <link rel="icon" type="image/x-icon" href="assets/images/icons/logo.webp" />
+  </head>
+  <script>
+    const toggle = document.getElementById("menuToggle");
+    const nav = document.getElementById("mainNav");
+    toggle.addEventListener("click", () => {
+      const open = nav.classList.toggle("open");
+      toggle.setAttribute("aria-expanded", open);
+    });
+  </script>
+  <body>
+    <header>
+      <div class="header-left">
+        <img src="assets/images/icons/logo.webp" alt="Logo" class="logo" />
+        <div class="logo-title">
+          <h1 class="header-title">Tanggap<span>In</span></h1>
+          <p class="header-subtitle">
+            Sistem Pengaduan Publik Berbasis Agentic AI
+          </p>
+        </div>
+      </div>
+      <nav class="header-nav" id="mainNav">
+        <ul>
+          <li><a href="index.html" class="active">Beranda</a></li>
+          <li><a href="cara-melaporkan.html">Cara Melaporkan</a></li>
+          <li><a href="laporan.html">Laporan</a></li>
+          <li><a href="faq.html">FAQ</a></li>
+        </ul>
+      </nav>
+      <div class="header-right">
+        <a href="#" class="btn-lapor" data-open-chat>
+          <span>Laporkan Sekarang</span>
+          <span class="btn-icon">↗</span>
+        </a>
+        <button
+          class="hamburger"
+          id="menuToggle"
+          aria-label="Buka menu"
+          aria-expanded="false"
+          aria-controls="mainNav"
+        >
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </header>
+    <main>
+      <section class="headline">
+        <div class="headline-left">
+          <h1>Laporkan masalah, dapatkan tanggapan, bangun kota bersama.</h1>
+          <p>
+            TanggapIn adalah platform pengaduan publik berbasis Agentic AI yang
+            memudahkan masyarakat untuk melaporkan masalah, mendapatkan
+            tanggapan, dan berkontribusi dalam pembangunan kota.
+          </p>
+          <a href="#" class="btn-lapor" style="margin-top: 20px" data-open-chat>
+            <span>Buat Laporan Baru</span>
+            <span class="btn-icon">↗</span>
+          </a>
+          <section class="stats-bar">
+            <div class="stat-left">
+              <img
+                src="assets/images/icons/Sustainability emblem.webp"
+                alt="Emblem of Sustainability"
+                class=""
+              />
+              <p>
+                Layanan yang ramah, mudah diakses, dan terbuka untuk masyarakat.
+              </p>
+            </div>
+            <div class="stat-item">
+              <img src="assets/images/icons/users-round.webp" alt="" />
+              <div class="stat-desc">
+                <span>24/7</span>
+                <p class="stat-text">Layanan online</p>
+              </div>
+            </div>
+            <div class="stat-item">
+              <img src="assets/images/icons/landmark.webp" alt="" />
+              <div class="stat-desc">
+                <span>1 Portal</span>
+                <p class="stat-text">Semua pengaduan</p>
+              </div>
+            </div>
+            <div class="stat-item">
+              <img src="assets/images/icons/leaf.webp" alt="" />
+              <div class="stat-desc">
+                <span>Mudah</span>
+                <p class="stat-text">Proses pelaporan</p>
+              </div>
+            </div>
+          </section>
+        </div>
+        <div class="headline-right">
+          <img
+            src="assets/images/mascots/mascot.webp"
+            alt="Mascots Image"
+            class="mascot-img"
+          />
+        </div>
+      </section>
+    </main>
+    <footer>
+      <h4>Dikelola oleh:</h4>
+      <div class="instansi">
+        <img
+          src="assets/images/logos/instansi-panrb.webp"
+          alt="panrb"
+          class="instansi-logo"
+        />
+        <img
+          src="assets/images/logos/instansi-kemendagri.webp"
+          alt="kemendagri"
+          class="instansi-logo"
+        />
+        <img
+          src="assets/images/logos/instansi-kominfo.webp"
+          alt="kemendagri"
+          class="instansi-logo"
+        />
+        <img
+          src="assets/images/logos/instansi-kantor staff presiden.webp"
+          alt="kemendagri"
+          class="instansi-logo"
+        />
+        <img
+          src="assets/images/logos/instansi-ombudsman.webp"
+          alt="kemendagri"
+          class="instansi-logo"
+        />
+      </div>
+      <p style="font-size: 10px">
+        Photo by
+        <a
+          href="https://unsplash.com/@apyfz?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText"
+          >Alim</a
+        >
+        on
+        <a
+          href="https://unsplash.com/photos/a-view-of-a-city-at-night-from-the-top-of-a-building-tuk5MObiohA?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText"
+          >Unsplash</a
+        >
+      </p>
+    </footer>
+    <!-- <div class="chat-overlay" id="chatOverlay" aria-hidden="true">
+      <div
+        class="chat-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="chatTitle"
+      >
+        <div class="chat-header">
+          <img
+            src="assets/images/mascots/mascot.webp"
+            alt=""
+            class="chat-avatar"
+          />
+          <div class="chat-title">
+            <h2 id="chatTitle">Asisten TanggapIn</h2>
+            <p>Siap membantu menyusun laporanmu</p>
+          </div>
+          <button class="chat-close" id="chatClose" aria-label="Tutup chat">
+            ✕
+          </button>
+        </div>
+        <div class="chat-messages" id="chatMessages" aria-live="polite"></div>
+        <div class="chat-chips" id="chatChips">
+          <button type="button">Jalan rusak</button>
+          <button type="button">Sampah menumpuk</button>
+          <button type="button">Lampu jalan mati</button>
+        </div>
+        <form class="chat-form" id="chatForm">
+          <textarea
+            id="chatInput"
+            rows="1"
+            placeholder="Tulis laporanmu..."
+            aria-label="Pesan"
+          ></textarea>
+          <button type="submit" class="chat-send" aria-label="Kirim">➤</button>
+        </form>
+      </div>
+    </div> -->
+    <script src="scripts/chat.js"></script>
+  </body>
+</html>
