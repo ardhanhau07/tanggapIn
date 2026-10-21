@@ -2,6 +2,10 @@ body.chat-open {
   overflow: hidden; /* kunci scroll halaman di belakang */
 }
 
+.loc-chip { max-width: 100%; min-width: 0; box-sizing: border-box; }
+.loc-chip span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; flex: 1; }
+.loc-chip button { flex-shrink: 0; }
+
 .chat-overlay {
   position: fixed;
   inset: 0;

@@ -4,7 +4,29 @@
   const MAX_PHOTOS = 4;
   const MAX_SIDE = 1280; // sisi terpanjang foto setelah dikecilkan (px)
   const LEAFLET = "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4";
+  const CLOUDINARY_CLOUD = "diwwapxhs";
+  const CLOUDINARY_PRESET = "tanggapin"; // buat di Cloudinary: Settings > Upload > Upload presets (mode Unsigned)
+  const API_URL = "";
   const DEFAULT_CENTER = [-6.2088, 106.8456]; // titik awal peta (Jakarta)
+
+  const SESSION_KEY = "tanggapin_session";
+  const SESSION_TTL = 24 * 60 * 60 * 1000; // 24 jam
+
+  function getSessionId() {
+    try {
+      const saved = JSON.parse(localStorage.getItem(SESSION_KEY) || "null");
+      if (saved && saved.id && Date.now() < saved.expires) return saved.id;
+    } catch {}
+
+    const id = crypto.randomUUID();
+    try {
+      localStorage.setItem(
+        SESSION_KEY,
+        JSON.stringify({ id, expires: Date.now() + SESSION_TTL }),
+      );
+    } catch {} // localStorage diblokir (mode privat): id tetap dipakai sementara
+    return id;
+  }
 
   /* ---------- Markup overlay (disuntikkan, tidak perlu di tiap HTML) ---------- */
   const TEMPLATE = `
@@ -74,10 +96,18 @@
   document.body.insertAdjacentHTML("beforeend", TEMPLATE);
 
   const $ = (id) => document.getElementById(id);
-  const overlay = $("chatOverlay"), messages = $("chatMessages"), form = $("chatForm");
-  const input = $("chatInput"), chips = $("chatChips"), note = $("chatNote");
-  const draftEl = $("chatDraft"), locPanel = $("locPanel"), btnLoc = $("btnLoc");
-  const mapModal = $("mapModal"), mapHint = $("mapHint"), mapConfirm = $("mapConfirm");
+  const overlay = $("chatOverlay"),
+    messages = $("chatMessages"),
+    form = $("chatForm");
+  const input = $("chatInput"),
+    chips = $("chatChips"),
+    note = $("chatNote");
+  const draftEl = $("chatDraft"),
+    locPanel = $("locPanel"),
+    btnLoc = $("btnLoc");
+  const mapModal = $("mapModal"),
+    mapHint = $("mapHint"),
+    mapConfirm = $("mapConfirm");
   const sendBtn = form.querySelector(".chat-send");
 
   function el(tag, cls, text) {
@@ -89,9 +119,10 @@
 
   /* ---------- State ---------- */
   let draftPhotos = []; // {blob, url}
-  let draftLoc = null;  // {text, lat, lng, source: "manual" | "gps" | "map"}
-  let collected = { text: false, location: null, photos: [] }; // dipakai balasan contoh
-  let lastFocus = null, started = false, noteTimer = null;
+  let draftLoc = null; // {text, lat, lng, source: "manual" | "gps" | "map"}
+  let lastFocus = null,
+    started = false,
+    noteTimer = null;
 
   /* ---------- Buka / tutup ---------- */
   function openChat() {
@@ -101,7 +132,10 @@
     document.body.classList.add("chat-open");
     if (!started) {
       started = true;
-      addMessage("bot", "Halo! Saya asisten TanggapIn. Ceritakan apa yang terjadi, lalu tambahkan lokasi dan foto lewat tombol di bawah kolom pesan.");
+      addMessage(
+        "bot",
+        "Halo! Saya asisten TanggapIn. Ceritakan apa yang terjadi, lalu tambahkan lokasi dan foto lewat tombol di bawah kolom pesan.",
+      );
     }
     setTimeout(() => input.focus(), 150);
   }
@@ -116,10 +150,15 @@
   }
 
   document.querySelectorAll("[data-open-chat]").forEach((a) =>
-    a.addEventListener("click", (e) => { e.preventDefault(); openChat(); })
+    a.addEventListener("click", (e) => {
+      e.preventDefault();
+      openChat();
+    }),
   );
   $("chatClose").addEventListener("click", closeChat);
-  overlay.addEventListener("mousedown", (e) => { if (e.target === overlay) closeChat(); });
+  overlay.addEventListener("mousedown", (e) => {
+    if (e.target === overlay) closeChat();
+  });
 
   document.addEventListener("keydown", (e) => {
     if (!overlay.classList.contains("open")) return;
@@ -133,12 +172,19 @@
 
   function trapFocus(e) {
     const scope = mapModal.hidden ? overlay : mapModal;
-    const f = [...scope.querySelectorAll("button, textarea, input, [href]")]
-      .filter((n) => !n.disabled && n.offsetParent !== null);
+    const f = [
+      ...scope.querySelectorAll("button, textarea, input, [href]"),
+    ].filter((n) => !n.disabled && n.offsetParent !== null);
     if (!f.length) return;
-    const first = f[0], last = f[f.length - 1];
-    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
-    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    const first = f[0],
+      last = f[f.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    }
   }
 
   /* ---------- Pesan ---------- */
@@ -154,7 +200,8 @@
       const wrap = el("div", "msg-photos");
       photoUrls.forEach((u, i) => {
         const im = document.createElement("img");
-        im.src = u; im.alt = "Foto lampiran " + (i + 1);
+        im.src = u;
+        im.alt = "Foto lampiran " + (i + 1);
         wrap.appendChild(im);
       });
       d.appendChild(wrap);
@@ -187,13 +234,32 @@
     $(id).addEventListener("change", async (e) => {
       await addPhotos([...e.target.files]);
       e.target.value = ""; // agar foto yang sama bisa dipilih lagi
-    })
+    }),
   );
+
+  async function uploadToCloudinary(blob) {
+    const fd = new FormData();
+    fd.append("file", blob);
+    fd.append("upload_preset", CLOUDINARY_PRESET);
+    fd.append("folder", "tanggapin");
+    const res = await fetch(
+      `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/image/upload`,
+      { method: "POST", body: fd },
+    );
+    if (!res.ok) throw new Error("Upload gagal: " + res.status);
+    return (await res.json()).secure_url;
+  }
 
   async function addPhotos(files) {
     for (const f of files) {
-      if (draftPhotos.length >= MAX_PHOTOS) { showNote(`Maksimal ${MAX_PHOTOS} foto per pesan.`); break; }
-      if (!f.type.startsWith("image/")) { showNote("Hanya file gambar yang bisa dilampirkan."); continue; }
+      if (draftPhotos.length >= MAX_PHOTOS) {
+        showNote(`Maksimal ${MAX_PHOTOS} foto per pesan.`);
+        break;
+      }
+      if (!f.type.startsWith("image/")) {
+        showNote("Hanya file gambar yang bisa dilampirkan.");
+        continue;
+      }
       try {
         const blob = await shrink(f);
         draftPhotos.push({ blob, url: URL.createObjectURL(blob) });
@@ -207,7 +273,9 @@
   // Perkecil dan kompres di perangkat. Re-encode lewat canvas juga membuang
   // metadata EXIF (termasuk koordinat GPS tersembunyi di foto).
   async function shrink(file) {
-    const bmp = await createImageBitmap(file, { imageOrientation: "from-image" });
+    const bmp = await createImageBitmap(file, {
+      imageOrientation: "from-image",
+    });
     const s = Math.min(1, MAX_SIDE / Math.max(bmp.width, bmp.height));
     const c = document.createElement("canvas");
     c.width = Math.round(bmp.width * s);
@@ -215,7 +283,11 @@
     c.getContext("2d").drawImage(bmp, 0, 0, c.width, c.height);
     bmp.close?.();
     return new Promise((res, rej) =>
-      c.toBlob((b) => (b ? res(b) : rej(new Error("encode"))), "image/jpeg", 0.8)
+      c.toBlob(
+        (b) => (b ? res(b) : rej(new Error("encode"))),
+        "image/jpeg",
+        0.8,
+      ),
     );
   }
 
@@ -225,7 +297,8 @@
     draftPhotos.forEach((p, i) => {
       const w = el("div", "thumb");
       const im = document.createElement("img");
-      im.src = p.url; im.alt = "Foto " + (i + 1);
+      im.src = p.url;
+      im.alt = "Foto " + (i + 1);
       const b = el("button", "", "✕");
       b.type = "button";
       b.setAttribute("aria-label", "Hapus foto " + (i + 1));
@@ -242,7 +315,10 @@
       const b = el("button", "", "✕");
       b.type = "button";
       b.setAttribute("aria-label", "Hapus lokasi");
-      b.addEventListener("click", () => { draftLoc = null; renderDraft(); });
+      b.addEventListener("click", () => {
+        draftLoc = null;
+        renderDraft();
+      });
       c.append(el("span", "", "📍 " + draftLoc.text), b);
       draftEl.appendChild(c);
     }
@@ -268,12 +344,18 @@
   // 1) ketik manual
   $("locSave").addEventListener("click", () => {
     const t = $("locText").value.trim();
-    if (!t) { showNote("Ketik alamat atau patokan lokasi dulu."); return; }
+    if (!t) {
+      showNote("Ketik alamat atau patokan lokasi dulu.");
+      return;
+    }
     setLocation({ text: t, lat: null, lng: null, source: "manual" });
     $("locText").value = "";
   });
   $("locText").addEventListener("keydown", (e) => {
-    if (e.key === "Enter") { e.preventDefault(); $("locSave").click(); }
+    if (e.key === "Enter") {
+      e.preventDefault();
+      $("locSave").click();
+    }
   });
 
   // 2) lokasi pengguna saat ini
@@ -281,21 +363,25 @@
     return new Promise((res, rej) => {
       if (!navigator.geolocation) return rej({ code: 0 });
       navigator.geolocation.getCurrentPosition(res, rej, {
-        enableHighAccuracy: true, timeout: 10000, maximumAge: 30000,
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 30000,
       });
     });
   }
 
   function geoMessage(e) {
-    if (e.code === 1) return "Izin lokasi ditolak. Aktifkan izin lokasi di browser, atau pilih lewat peta atau ketik manual.";
-    if (e.code === 3) return "Pencarian lokasi terlalu lama. Coba lagi atau pilih lewat peta.";
+    if (e.code === 1)
+      return "Izin lokasi ditolak. Aktifkan izin lokasi di browser, atau pilih lewat peta atau ketik manual.";
+    if (e.code === 3)
+      return "Pencarian lokasi terlalu lama. Coba lagi atau pilih lewat peta.";
     return "Lokasi tidak tersedia di perangkat ini. Coba pilih lewat peta atau ketik manual.";
   }
 
   async function reverseGeocode(lat, lng) {
     try {
       const r = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}&accept-language=id`
+        `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}&accept-language=id`,
       );
       if (!r.ok) throw new Error("http " + r.status);
       return (await r.json()).display_name || null;
@@ -306,7 +392,12 @@
 
   async function setCoords(lat, lng, source) {
     const addr = await reverseGeocode(lat, lng);
-    setLocation({ text: addr || `${lat.toFixed(5)}, ${lng.toFixed(5)}`, lat, lng, source });
+    setLocation({
+      text: addr || `${lat.toFixed(5)}, ${lng.toFixed(5)}`,
+      lat,
+      lng,
+      source,
+    });
   }
 
   $("locGps").addEventListener("click", async () => {
@@ -320,7 +411,8 @@
   });
 
   // 3) pilih di peta (Leaflet + OpenStreetMap, dimuat saat dibutuhkan)
-  let leafletReady = null, map = null;
+  let leafletReady = null,
+    map = null;
 
   function loadLeaflet() {
     if (window.L) return Promise.resolve();
@@ -333,7 +425,10 @@
       const s = document.createElement("script");
       s.src = LEAFLET + "/leaflet.js";
       s.onload = res;
-      s.onerror = () => { leafletReady = null; rej(new Error("leaflet")); };
+      s.onerror = () => {
+        leafletReady = null;
+        rej(new Error("leaflet"));
+      };
       document.head.appendChild(s);
     });
     return leafletReady;
@@ -345,7 +440,8 @@
     try {
       await loadLeaflet();
     } catch {
-      mapHint.textContent = "Peta gagal dimuat. Periksa koneksi, atau pakai opsi lain.";
+      mapHint.textContent =
+        "Peta gagal dimuat. Periksa koneksi, atau pakai opsi lain.";
       return;
     }
     if (!map) {
@@ -356,7 +452,8 @@
       }).addTo(map);
     }
     setTimeout(() => map.invalidateSize(), 0);
-    if (draftLoc && draftLoc.lat != null) map.setView([draftLoc.lat, draftLoc.lng], 17);
+    if (draftLoc && draftLoc.lat != null)
+      map.setView([draftLoc.lat, draftLoc.lng], 17);
     mapHint.textContent = "Geser peta, pin di tengah menandai lokasi.";
     $("mapLocate").focus();
   }
@@ -390,73 +487,95 @@
   /* ---------- Kirim ---------- */
   async function send(raw) {
     const text = raw.trim();
-    const photos = draftPhotos, loc = draftLoc;
+    const photos = draftPhotos,
+      loc = draftLoc;
     if (!text && !photos.length && !loc) return;
 
     chips.hidden = true;
-    addUserMessage(text, photos.map((p) => p.url), loc);
+    addUserMessage(
+      text,
+      photos.map((p) => p.url),
+      loc,
+    );
 
-    if (text) collected.text = true;
-    if (loc) collected.location = loc;
-    collected.photos.push(...photos.map((p) => p.blob));
-
-    draftPhotos = []; draftLoc = null;
-    renderDraft();
-    setPanel(false);
     input.value = "";
     autoGrow();
     sendBtn.disabled = true;
-
     const typing = showTyping();
+
     let reply;
     try {
-      reply = await getBotReply({ text, location: loc, photos: photos.map((p) => p.blob) });
-    } catch {
-      reply = "Maaf, terjadi gangguan. Silakan coba kirim ulang pesanmu.";
+      const urls = await Promise.all(
+        photos.map(async (p) => {
+          if (!p.cloudUrl) p.cloudUrl = await uploadToCloudinary(p.blob);
+          return p.cloudUrl;
+        }),
+      );
+
+      draftPhotos = [];
+      draftLoc = null;
+      renderDraft();
+      setPanel(false);
+
+      reply = await getBotReply({ text, location: loc, photoUrls: urls });
+    } catch (err) {
+      console.error("Gagal kirim:", err);
+      input.value = text;
+      autoGrow();
+      showNote("Gagal mengirim. Periksa koneksi lalu coba lagi.", 6000);
+      reply = "Maaf, terjadi gangguan saat mengirim. Silakan coba kirim ulang.";
     }
+
     typing.remove();
     addMessage("bot", reply);
     sendBtn.disabled = false;
     input.focus();
   }
 
-  form.addEventListener("submit", (e) => { e.preventDefault(); send(input.value); });
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    send(input.value);
+  });
   input.addEventListener("keydown", (e) => {
-    if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); form.requestSubmit(); }
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      form.requestSubmit();
+    }
   });
   function autoGrow() {
     input.style.height = "auto";
     input.style.height = Math.min(input.scrollHeight, 120) + "px";
   }
   input.addEventListener("input", autoGrow);
-  chips.querySelectorAll("button").forEach((b) =>
-    b.addEventListener("click", () => send(b.textContent))
-  );
+  chips
+    .querySelectorAll("button")
+    .forEach((b) => b.addEventListener("click", () => send(b.textContent)));
 
   /* ---------- Hubungkan ke backend agent di sini ---------- */
-  async function getBotReply(turn) {
-    // turn = { text, location: {text, lat, lng, source} | null, photos: Blob[] }
-    //
-    // Contoh pemanggilan backend (foto dikirim sebagai file, bukan base64):
-    //
-    // const fd = new FormData();
-    // fd.append("text", turn.text);
-    // if (turn.location) fd.append("location", JSON.stringify(turn.location));
-    // turn.photos.forEach((b, i) => fd.append("photos", b, `foto-${i + 1}.jpg`));
-    // const res = await fetch("/api/laporan/chat", { method: "POST", body: fd });
-    // if (!res.ok) throw new Error("Request gagal");
-    // return (await res.json()).reply;
+  async function getBotReply({ text, location, photoUrls }) {
+    const payload = {
+      session_id: getSessionId(),
+      message: text,
+      latitude: location?.lat ?? null,
+      longitude: location?.lng ?? null,
+      manual_location: location?.source === "manual" ? location.text : null,
+      photo_urls: photoUrls,
+      time: new Date().toISOString(),
+    };
 
-    // ---- Balasan CONTOH untuk uji alur (hapus bila backend sudah ada) ----
-    await new Promise((r) => setTimeout(r, 900));
-    const missing = [];
-    if (!collected.text) missing.push("deskripsi kejadian");
-    if (!collected.location) missing.push("lokasi kejadian");
-    if (!collected.photos.length) missing.push("foto kondisi di lokasi");
-    if (missing.length) {
-      return "Terima kasih. Agar laporanmu lengkap, mohon tambahkan: " + missing.join(", ") + ".";
+    // Mode simulasi: backend belum ada
+    if (!API_URL) {
+      console.log("Payload yang akan dikirim ke backend:", payload);
+      await new Promise((r) => setTimeout(r, 800));
+      return "Laporan diterima (simulasi). Backend belum terhubung.";
     }
-    collected = { text: false, location: null, photos: [] };
-    return "Laporan berhasil dikirim. Nomor laporanmu: TG-2026-" + String(Math.floor(Math.random() * 9000) + 1000) + ".";
+
+    const res = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    if (!res.ok) throw new Error("Request gagal: " + res.status);
+    return (await res.json()).reply;
   }
 })();
