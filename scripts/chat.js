@@ -6,7 +6,7 @@
   const LEAFLET = "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4";
   const CLOUDINARY_CLOUD = "diwwapxhs";
   const CLOUDINARY_PRESET = "tanggapin"; // buat di Cloudinary: Settings > Upload > Upload presets (mode Unsigned)
-  const API_URL = "";
+  const API_URL = "https://tanggapin-api-898936746412.asia-southeast1.run.app/api/v1/chat";
   const DEFAULT_CENTER = [-6.2088, 106.8456]; // titik awal peta (Jakarta)
 
   const SESSION_KEY = "tanggapin_session";
