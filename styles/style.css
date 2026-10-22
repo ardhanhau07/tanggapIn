@@ -1,13 +1,25 @@
-body {
+.bg-fixed-layer {
+  margin: 0;
+  padding: 20px 250px 0px;
+  position: relative;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.bg-fixed-layer::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1; /* Meletakkan background di belakang seluruh elemen */
+
   background-image:
     linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.5)),
     url("../assets/images/background 2.webp");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  background-attachment: fixed;
-  margin: 20px 250px 0px;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 header {
