@@ -1,14 +1,11 @@
-// Klien backend TanggapIn v1.0 (FE publik): POST /api/v1/chat, GET /api/v1/chat/{session_id},
-// dan unggah foto langsung ke Cloudinary.
 window.API = (() => {
   "use strict";
   const C = window.APP_CONFIG || {};
   const BASE = String(C.API_BASE_URL || "").replace(/\/+$/, "");
   const SKEY = "aduan_session";
   const DAY = 24 * 3600 * 1000;
-  let memSession = null; // cadangan bila localStorage tidak tersedia
+  let memSession = null; 
 
-  /* ---------- session_id: UUID v4, berlaku 24 jam ---------- */
   function readSession() {
     try {
       const raw = JSON.parse(localStorage.getItem(SKEY) || "null");
@@ -25,7 +22,6 @@ window.API = (() => {
     return memSession.id;
   }
 
-  /* ---------- Foto: unggah langsung ke Cloudinary, ambil secure_url ---------- */
   async function uploadFoto(blob) {
     const fd = new FormData();
     fd.append("file", blob, "foto.jpg");
@@ -37,7 +33,6 @@ window.API = (() => {
     return (await r.json()).secure_url;
   }
 
-  /* ---------- Chat ---------- */
   async function parse(r) {
     let body = null;
     try { body = await r.json(); } catch (e) { /* bukan JSON */ }
@@ -50,7 +45,6 @@ window.API = (() => {
     return body;
   }
 
-  // Satu pemanggilan = satu pesan warga. Mengembalikan { reply, status, is_emergency, session_id }.
   async function kirimPesan({ message = "", lat = null, lng = null, label = null, photoUrls = [] }) {
     const r = await fetch(`${BASE}/api/v1/chat`, {
       method: "POST",
@@ -58,21 +52,40 @@ window.API = (() => {
       body: JSON.stringify({
         session_id: getSessionId(),
         message,
-        latitude: lat, longitude: lng, // harus berpasangan atau keduanya null
+        latitude: lat, longitude: lng, 
         manual_location: label,
         photo_urls: photoUrls,
         time: new Date().toISOString(),
       }),
-      signal: AbortSignal.timeout(60000), // respons LLM bisa 2-10 detik
+      signal: AbortSignal.timeout(60000),
     });
     return parse(r);
   }
 
-  // Polling: { status, last_submitted_at, notice }
   async function getStatus() {
     const r = await fetch(`${BASE}/api/v1/chat/${getSessionId()}`, { signal: AbortSignal.timeout(15000) });
     return parse(r);
   }
 
-  return { hasSession, getSessionId, uploadFoto, kirimPesan, getStatus };
+   const PATH_LAPORAN_PUBLIK = "/api/v1/aduan/publik";
+
+  async function getLaporan() {
+    const r = await fetch(BASE + PATH_LAPORAN_PUBLIK, { signal: AbortSignal.timeout(20000) });
+    const body = await parse(r);
+    return Array.isArray(body) ? body : body.data || [];
+  }
+
+ function toCard(a) {
+    return {
+      kode: String(a.id_aduan || "").slice(0, 8),
+      status: String(a.status || "").toLowerCase(),
+      judul: a.isi_aduan || "",
+      lokasi: a.lokasi_teks || "-",
+      tanggal: new Date(a.created_at).toLocaleDateString("sv-SE", { timeZone: "Asia/Jakarta" }), // YYYY-MM-DD (WIB)
+      deskripsi: "", 
+      catatan: a.catatan || "",
+    };
+  }
+
+  return { hasSession, getSessionId, uploadFoto, kirimPesan, getStatus, getLaporan, toCard };
 })();
