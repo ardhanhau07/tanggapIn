@@ -23,9 +23,13 @@
       <nav class="header-nav" id="mainNav">
         <ul>
           <li><a href="index.html">Beranda</a></li>
-          <li><a href="cara-melaporkan.html" class="active">Cara Melaporkan</a></li>
-          <li><a href="laporan.html">Laporan</a></li>
-          <li><a href="faq.html">FAQ</a></li>
+          <li>
+            <a href="cara-melaporkan.html" class="active" aria-current="page"
+              >Cara Melaporkan</a
+            >
+          </li>
+          <li><a href="#">Laporan</a></li>
+          <li><a href="#">FAQ</a></li>
         </ul>
       </nav>
       <div class="header-right">
@@ -79,18 +83,21 @@
               </p>
             </li>
             <li>
-              <h3>Kirim laporan</h3>
+              <h3>Konfirmasi pengiriman</h3>
               <p>
-                Klik tombol <strong>Kirim</strong> setelah semua informasi kamu
-                isi.
+                Setelah informasi cukup, asisten menawarkan untuk meneruskan
+                laporanmu. Balas bahwa kamu setuju, misalnya
+                <strong>sudah cukup, kirim saja</strong>. Laporan juga
+                diteruskan otomatis jika kamu tidak membalas selama sekitar dua
+                menit.
               </p>
             </li>
             <li>
-              <h3>Tunggu pemeriksaan AI</h3>
+              <h3>Laporan diteruskan ke petugas</h3>
               <p>
-                Asisten akan mengecek kelengkapan laporanmu. Kalau ada yang
-                kurang, kamu akan diminta melengkapinya. Kalau sudah lengkap,
-                kamu akan mendapat pemberitahuan bahwa laporan berhasil dikirim.
+                Asisten memberi tahu bahwa laporanmu sudah diteruskan ke dinas
+                terkait. Kalau ada pemberitahuan tambahan, pesannya akan muncul
+                di chat selama jendela chat masih terbuka.
               </p>
             </li>
           </ol>
@@ -210,8 +217,9 @@
         </form>
       </div>
     </div>
-
     <script src="scripts/menu.js"></script>
+    <script src="scripts/config.js"></script>
+    <script src="scripts/api.js"></script>
     <script src="scripts/chat.js"></script>
   </body>
 </html>

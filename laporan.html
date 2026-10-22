@@ -33,8 +33,13 @@
           <span>Laporkan Sekarang</span>
           <span class="btn-icon">↗</span>
         </a>
-        <button class="hamburger" id="menuToggle" aria-label="Buka menu"
-                aria-expanded="false" aria-controls="mainNav">
+        <button
+          class="hamburger"
+          id="menuToggle"
+          aria-label="Buka menu"
+          aria-expanded="false"
+          aria-controls="mainNav"
+        >
           <span></span><span></span><span></span>
         </button>
       </div>
@@ -44,11 +49,16 @@
       <section class="panel laporan">
         <h1>Daftar Laporan</h1>
         <p class="laporan-lead">
-          Pantau perkembangan laporan masyarakat. Pilih status untuk
-          menyaring daftar.
+          Pantau perkembangan laporan masyarakat. Pilih status untuk menyaring
+          daftar.
         </p>
 
-        <div class="filter" id="filter" role="group" aria-label="Filter status laporan"></div>
+        <div
+          class="filter"
+          id="filter"
+          role="group"
+          aria-label="Filter status laporan"
+        ></div>
 
         <div class="report-list" id="reportList" aria-live="polite"></div>
       </section>
@@ -56,7 +66,8 @@
 
     <footer>
       <p>
-        Photo by <a
+        Photo by
+        <a
           href="https://unsplash.com/@apyfz?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText"
           >Alim</a
         >
@@ -68,24 +79,55 @@
       </p>
       <h4>Dikelola oleh:</h4>
       <div class="instansi">
-        <img src="assets/images/logos/instansi-panrb.webp" alt="PANRB" class="instansi-logo" />
-        <img src="assets/images/logos/instansi-kemendagri.webp" alt="Kemendagri" class="instansi-logo" />
-        <img src="assets/images/logos/instansi-kominfo.webp" alt="Kominfo" class="instansi-logo" />
-        <img src="assets/images/logos/instansi-kantor staff presiden.webp" alt="Kantor Staf Presiden" class="instansi-logo" />
-        <img src="assets/images/logos/instansi-ombudsman.webp" alt="Ombudsman" class="instansi-logo" />
+        <img
+          src="assets/images/logos/instansi-panrb.webp"
+          alt="PANRB"
+          class="instansi-logo"
+        />
+        <img
+          src="assets/images/logos/instansi-kemendagri.webp"
+          alt="Kemendagri"
+          class="instansi-logo"
+        />
+        <img
+          src="assets/images/logos/instansi-kominfo.webp"
+          alt="Kominfo"
+          class="instansi-logo"
+        />
+        <img
+          src="assets/images/logos/instansi-kantor staff presiden.webp"
+          alt="Kantor Staf Presiden"
+          class="instansi-logo"
+        />
+        <img
+          src="assets/images/logos/instansi-ombudsman.webp"
+          alt="Ombudsman"
+          class="instansi-logo"
+        />
       </div>
     </footer>
 
     <!-- Overlay chat (sama seperti di index.html) -->
     <div class="chat-overlay" id="chatOverlay" aria-hidden="true">
-      <div class="chat-dialog" role="dialog" aria-modal="true" aria-labelledby="chatTitle">
+      <div
+        class="chat-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="chatTitle"
+      >
         <div class="chat-header">
-          <img src="assets/images/mascots/mascot.webp" alt="" class="chat-avatar" />
+          <img
+            src="assets/images/mascots/mascot.webp"
+            alt=""
+            class="chat-avatar"
+          />
           <div class="chat-title">
             <h2 id="chatTitle">Asisten TanggapIn</h2>
             <p>Siap membantu menyusun laporanmu</p>
           </div>
-          <button class="chat-close" id="chatClose" aria-label="Tutup chat">✕</button>
+          <button class="chat-close" id="chatClose" aria-label="Tutup chat">
+            ✕
+          </button>
         </div>
         <div class="chat-messages" id="chatMessages" aria-live="polite"></div>
         <div class="chat-chips" id="chatChips">
@@ -94,14 +136,19 @@
           <button type="button">Lampu jalan mati</button>
         </div>
         <form class="chat-form" id="chatForm">
-          <textarea id="chatInput" rows="1" placeholder="Tulis laporanmu..." aria-label="Pesan"></textarea>
+          <textarea
+            id="chatInput"
+            rows="1"
+            placeholder="Tulis laporanmu..."
+            aria-label="Pesan"
+          ></textarea>
           <button type="submit" class="chat-send" aria-label="Kirim">➤</button>
         </form>
       </div>
     </div>
-
     <script src="scripts/menu.js"></script>
-    <script src="scripts/laporan.js"></script>
+    <script src="scripts/config.js"></script>
+    <script src="scripts/api.js"></script>
     <script src="scripts/chat.js"></script>
   </body>
 </html>

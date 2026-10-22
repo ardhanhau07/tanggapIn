@@ -1,10 +1,7 @@
+/* ===== Chat overlay TanggapIn ===== */
 body.chat-open {
   overflow: hidden; /* kunci scroll halaman di belakang */
 }
-
-.loc-chip { max-width: 100%; min-width: 0; box-sizing: border-box; }
-.loc-chip span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; flex: 1; }
-.loc-chip button { flex-shrink: 0; }
 
 .chat-overlay {
   position: fixed;
@@ -129,7 +126,7 @@ body.chat-open {
 
 .chat-msg.user {
   align-self: flex-end;
-  background: #4d0c0c;
+  background: #ff0000;
   border-bottom-right-radius: 4px;
 }
 
@@ -498,4 +495,23 @@ body.chat-open {
 @media (max-width: 480px) {
   .map-foot { flex-direction: column; align-items: stretch; }
   .map-foot p { text-align: center; }
+}
+
+/* ===== Banner darurat & pesan sistem ===== */
+.chat-emergency {
+  padding: 10px 16px;
+  background: #b91c1c;
+  color: #fff;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+.chat-emergency a { color: #fff; text-decoration: underline; }
+
+.chat-msg.sys {
+  align-self: center;
+  max-width: 95%;
+  border: 1px solid rgba(74, 222, 128, 0.4);
+  background: rgba(74, 222, 128, 0.15);
+  font-size: 0.82rem;
+  text-align: center;
 }
